@@ -4,19 +4,18 @@ on:
     branches:
       - main
 
-# Workflow-level permissions (ensure GITHUB_TOKEN can create deployments and push gh-pages)
 permissions:
+  contents: read
   pages: write
   id-token: write
-  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -25,23 +24,29 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
+      - name: Install & build site
+        run: |
+          # adjust for your project: npm ci && npm run build
+          # ensure the output directory is e.g. ./public or ./dist
+          echo "Build step - replace with your real build commands"
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v1
         with:
-          path: .
+          path: ./public   # <-- change to your built site output
 
       - name: Deploy to GitHub Pages
         id: deploy_pages
         uses: actions/deploy-pages@v1
-        continue-on-error: true
+        # remove continue-on-error so errors surface
 
       - name: Fallback — deploy to gh-pages branch
         if: steps.deploy_pages.outcome != 'success'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./public
           publish_branch: gh-pages
