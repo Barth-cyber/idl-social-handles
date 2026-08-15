@@ -4,6 +4,7 @@ on:
     branches:
       - main
 
+# Workflow-level permissions: allow the GITHUB_TOKEN to create Pages deployments and sign tokens
 permissions:
   contents: read
   pages: write
@@ -25,10 +26,11 @@ jobs:
           fetch-depth: 0
 
       - name: Install & build site
+        # Replace these commands with your real build commands for the project.
+        # Ensure the build outputs static files to ./public (or change publish_dir below).
         run: |
-          # adjust for your project: npm ci && npm run build
-          # ensure the output directory is e.g. ./public or ./dist
-          echo "Build step - replace with your real build commands"
+          npm ci
+          npm run build
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
@@ -36,12 +38,11 @@ jobs:
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./public   # <-- change to your built site output
+          path: ./public   # <-- change to your actual build output (e.g. ./dist) if needed
 
       - name: Deploy to GitHub Pages
         id: deploy_pages
         uses: actions/deploy-pages@v1
-        # remove continue-on-error so errors surface
 
       - name: Fallback — deploy to gh-pages branch
         if: steps.deploy_pages.outcome != 'success'
