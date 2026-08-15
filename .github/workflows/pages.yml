@@ -25,4 +25,14 @@ jobs:
           path: .
 
       - name: Deploy to GitHub Pages
+        id: deploy_pages
         uses: actions/deploy-pages@v1
+        continue-on-error: true
+
+      - name: Fallback — deploy to gh-pages branch
+        if: steps.deploy_pages.outcome != 'success'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
