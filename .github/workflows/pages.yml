@@ -4,17 +4,26 @@ on:
     branches:
       - main
 
+# Workflow-level permissions (ensure GITHUB_TOKEN can create deployments and push gh-pages)
+permissions:
+  pages: write
+  id-token: write
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
