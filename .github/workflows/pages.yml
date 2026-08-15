@@ -40,7 +40,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy_pages
         uses: actions/deploy-pages@v1
-        # remove continue-on-error so errors surface
 
       - name: Fallback — deploy to gh-pages branch
         if: steps.deploy_pages.outcome != 'success'
